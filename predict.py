@@ -19,7 +19,7 @@ labels_2=[]
 
 not_one=0
 not_two=0
-
+test_result= open('test_result.txt','w',encoding='utf-8')
 use_tfidf=0
 for title,doc in tqdm(zip(titles,train_docs)):
     # 筛选标签重要的词
@@ -54,11 +54,19 @@ for title,doc in tqdm(zip(titles,train_docs)):
         text=title_text*10+doc_text
 
         word_weight=[(word,weight) for word ,weight in extract_tags(text,withWeight=True)]
-        key_1,key_2=word_weight[0][0],word_weight[1][0]
-
+        if len(word_weight)>=2:
+            key_1,key_2=word_weight[0][0],word_weight[1][0]
+        elif len(word_weight)==1:
+            key_1, key_2 = word_weight[0][0], ''
+        else:
+            key_1, key_2 = '', ''
         labels_1.append(key_1)
         labels_2.append(key_2)
 
+        test_result.write("title_word_tags:{} \t title:{} \n".format(title_word_tags, title))
+        test_result.write("doc_word_tags{} \n".format(doc_word_tags))
+        test_result.write("word_weight:{} \n".format(word_weight))
+        test_result.write('--' * 69+"\n")
         # print("title_word_tags:{} \t title:{}".format(title_word_tags, title))
         # print("doc_word_tags{}".format(doc_word_tags))
         # print("word_weight:{}".format(word_weight))
